@@ -1,7 +1,54 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MAIN {
+
+    public static void sauvegarder(ArrayList<Double> depenses, ArrayList<String> nomsDepenses, ArrayList<Double> revenu,
+            ArrayList<String> nomsRevenu) {
+        try {
+            FileWriter fw1 = new FileWriter("depenses.txt");
+            for (int i = 0; i < depenses.size(); i++) {
+                fw1.write(nomsDepenses.get(i) + "," + depenses.get(i) + "\n");
+            }
+            fw1.close();
+            FileWriter fw2 = new FileWriter("revenu.txt");
+            for (int i = 0; i < revenu.size(); i++) {
+                fw2.write(nomsRevenu.get(i) + "," + revenu.get(i) + "\n");
+            }
+            fw2.close();
+
+        } catch (Exception e) {
+            System.out.println("Erreur de sauvegarde!");
+        }
+    }
+
+    public static void charger(ArrayList<Double> depenses, ArrayList<String> nomsDepenses, ArrayList<Double> revenu,
+            ArrayList<String> nomsRevenu) {
+        try {
+            BufferedReader br1 = new BufferedReader(new FileReader("depenses.txt"));
+            String ligne1;
+            while((ligne1 = br1.readLine()) != null){
+                String[] parties = ligne1.split(",");
+                if (parties.length >= 2) {
+                    nomsDepenses.add(parties[0]);
+                    depenses.add(Double.parseDouble(parties[1]));
+                }
+            }
+            BufferedReader br2 = new BufferedReader(new FileReader("revenu.txt"));
+            String ligne2;
+            while((ligne2 = br2.readLine()) != null){
+                String[] parties = ligne2.split(",");
+                if (parties.length >= 2) {
+                    nomsRevenu.add(parties[0]);
+                    revenu.add(Double.parseDouble(parties[1]));
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -12,6 +59,8 @@ public class MAIN {
         ArrayList<String> nomsRevenu = new ArrayList<>();
 
         int choix = 0;
+
+        charger(depenses, nomsDepenses, revenu, nomsRevenu);
 
         while (choix != 4) {
 
@@ -85,5 +134,7 @@ public class MAIN {
         }
 
         System.out.println("A bientot!");
+        sauvegarder(depenses, nomsDepenses, revenu, nomsRevenu);
+        ;
     }
 }

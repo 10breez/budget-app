@@ -1,0 +1,3 @@
+loyer,900.0
+Nourriture,350.0
+Assurance,400.0
