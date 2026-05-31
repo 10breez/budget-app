@@ -1,2 +1,0 @@
-Salaire,2500.0
-bourse,800.0
