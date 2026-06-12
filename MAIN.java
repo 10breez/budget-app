@@ -6,17 +6,16 @@ import java.util.Scanner;
 
 public class MAIN {
 
-    public static void sauvegarder(ArrayList<Double> depenses, ArrayList<String> nomsDepenses, ArrayList<Double> revenu,
-            ArrayList<String> nomsRevenu) {
+    public static void sauvegarder(ArrayList<Depense> depense, ArrayList<Revenu> revenu) {
         try {
             FileWriter fw1 = new FileWriter("depenses.txt");
-            for (int i = 0; i < depenses.size(); i++) {
-                fw1.write(nomsDepenses.get(i) + "," + depenses.get(i) + "\n");
+            for (int i = 0; i < depense.size(); i++) {
+                fw1.write(depense.get(i).getNom() + "," + depense.get(i).getMontant() + "\n");
             }
             fw1.close();
             FileWriter fw2 = new FileWriter("revenu.txt");
             for (int i = 0; i < revenu.size(); i++) {
-                fw2.write(nomsRevenu.get(i) + "," + revenu.get(i) + "\n");
+                fw2.write(revenu.get(i).getNom() + "," + revenu.get(i).getMontant() + "\n");
             }
             fw2.close();
 
@@ -25,25 +24,22 @@ public class MAIN {
         }
     }
 
-    public static void charger(ArrayList<Double> depenses, ArrayList<String> nomsDepenses, ArrayList<Double> revenu,
-            ArrayList<String> nomsRevenu) {
+    public static void charger(ArrayList<Depense> depense, ArrayList<Revenu> revenu) {
         try {
             BufferedReader br1 = new BufferedReader(new FileReader("depenses.txt"));
             String ligne1;
-            while((ligne1 = br1.readLine()) != null){
+            while ((ligne1 = br1.readLine()) != null) {
                 String[] parties = ligne1.split(",");
                 if (parties.length >= 2) {
-                    nomsDepenses.add(parties[0]);
-                    depenses.add(Double.parseDouble(parties[1]));
+                    depense.add(new Depense(parties[0], Double.parseDouble(parties[1])));
                 }
             }
             BufferedReader br2 = new BufferedReader(new FileReader("revenu.txt"));
             String ligne2;
-            while((ligne2 = br2.readLine()) != null){
+            while ((ligne2 = br2.readLine()) != null) {
                 String[] parties = ligne2.split(",");
                 if (parties.length >= 2) {
-                    nomsRevenu.add(parties[0]);
-                    revenu.add(Double.parseDouble(parties[1]));
+                    revenu.add(new Revenu(parties[0], Double.parseDouble(parties[1])));
                 }
             }
         } catch (Exception e) {
@@ -53,14 +49,12 @@ public class MAIN {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         scanner.useLocale(java.util.Locale.US);
-        ArrayList<Double> depenses = new ArrayList<>();
-        ArrayList<String> nomsDepenses = new ArrayList<>();
-        ArrayList<Double> revenu = new ArrayList<>();
-        ArrayList<String> nomsRevenu = new ArrayList<>();
+        ArrayList<Depense> depense = new ArrayList<>();
+        ArrayList<Revenu> revenu = new ArrayList<>();
 
         int choix = 0;
 
-        charger(depenses, nomsDepenses, revenu, nomsRevenu);
+        charger(depense, revenu);
 
         while (choix != 4) {
 
@@ -85,8 +79,7 @@ public class MAIN {
                 montant = scanner.nextDouble();
                 scanner.nextLine();
                 System.out.println("Dépense ajoutée : " + nom + " - " + montant + "$");
-                depenses.add(montant);
-                nomsDepenses.add(nom);
+                depense.add(new Depense(nom, montant));
 
             } else if (choix == 2) {
 
@@ -99,8 +92,7 @@ public class MAIN {
                 montant = scanner.nextDouble();
                 scanner.nextLine();
                 System.out.println("Revenu ajouté : " + nom + " - " + montant + "$");
-                revenu.add(montant);
-                nomsRevenu.add(nom);
+                revenu.add(new Revenu(nom, montant));
 
             } else if (choix == 3) {
 
@@ -109,10 +101,11 @@ public class MAIN {
                 double solde = 0;
                 System.out.println("\n--- Mes depenses ---");
 
-                for (int i = 0; i < depenses.size(); i++) {
+                for (int i = 0; i < depense.size(); i++) {
                     int numero = i + 1;
-                    sommeDepenses += depenses.get(i);
-                    System.out.println(numero + ". " + nomsDepenses.get(i) + " - " + depenses.get(i) + "$");
+                    sommeDepenses += depense.get(i).getMontant();
+                    System.out.println(
+                            numero + ". " + depense.get(i).getNom() + " - " + depense.get(i).getMontant() + "$");
                 }
 
                 System.out.println("--------------------");
@@ -120,8 +113,9 @@ public class MAIN {
 
                 for (int i = 0; i < revenu.size(); i++) {
                     int numero = i + 1;
-                    sommeRevenus += revenu.get(i);
-                    System.out.println(numero + ". " + nomsRevenu.get(i) + " - " + revenu.get(i) + "$");
+                    sommeRevenus += revenu.get(i).getMontant();
+                    System.out
+                            .println(numero + ". " + revenu.get(i).getNom() + " - " + revenu.get(i).getMontant() + "$");
                 }
 
                 System.out.println("--------------------");
@@ -134,7 +128,7 @@ public class MAIN {
         }
 
         System.out.println("A bientot!");
-        sauvegarder(depenses, nomsDepenses, revenu, nomsRevenu);
+        sauvegarder(depense, revenu);
         ;
     }
 }
