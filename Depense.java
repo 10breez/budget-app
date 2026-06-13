@@ -1,17 +1,7 @@
-public class Depense {
-    String nom;
-    double montant;
+public class Depense extends Transaction {
 
     public Depense(String nom, double montant) {
-        this.nom = nom;
-        this.montant = montant;
+        super(nom, montant);
     }
 
-    public String getNom() {
-        return nom;
-    }
-
-    public double getMontant() {
-        return montant;
-    }
 }
