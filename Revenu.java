@@ -4,4 +4,8 @@ public class Revenu extends Transaction {
         super(nom, montant);
     }
 
+    public double getMontantSigne(){
+        return getMontant();
+    }
+
 }

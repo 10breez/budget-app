@@ -6,41 +6,55 @@ import java.util.Scanner;
 
 public class MAIN {
 
-    public static void sauvegarder(ArrayList<Depense> depense, ArrayList<Revenu> revenu) {
+    public static void sauvegarder(ArrayList<Transaction> transactions) {
         try {
             FileWriter fw1 = new FileWriter("depenses.txt");
-            for (int i = 0; i < depense.size(); i++) {
-                fw1.write(depense.get(i).getNom() + "," + depense.get(i).getMontant() + "\n");
+            for (int i = 0; i < transactions.size(); i++) {
+
+                if (transactions.get(i) instanceof Depense) {
+                    fw1.write(transactions.get(i).getNom() + "," + transactions.get(i).getMontant() + "\n");
+                }
+
             }
             fw1.close();
             FileWriter fw2 = new FileWriter("revenu.txt");
-            for (int i = 0; i < revenu.size(); i++) {
-                fw2.write(revenu.get(i).getNom() + "," + revenu.get(i).getMontant() + "\n");
+            for (int i = 0; i < transactions.size(); i++) {
+
+                if (transactions.get(i) instanceof Revenu) {
+                    fw2.write(transactions.get(i).getNom() + "," + transactions.get(i).getMontant() + "\n");
+                }
+
             }
             fw2.close();
 
         } catch (Exception e) {
             System.out.println("Erreur de sauvegarde!");
         }
+
     }
 
-    public static void charger(ArrayList<Depense> depense, ArrayList<Revenu> revenu) {
+    public static void charger(ArrayList<Transaction> transactions) {
         try {
             BufferedReader br1 = new BufferedReader(new FileReader("depenses.txt"));
             String ligne1;
             while ((ligne1 = br1.readLine()) != null) {
                 String[] parties = ligne1.split(",");
+
                 if (parties.length >= 2) {
-                    depense.add(new Depense(parties[0], Double.parseDouble(parties[1])));
+                    transactions.add(new Depense(parties[0], Double.parseDouble(parties[1])));
                 }
+
             }
             BufferedReader br2 = new BufferedReader(new FileReader("revenu.txt"));
             String ligne2;
             while ((ligne2 = br2.readLine()) != null) {
+
                 String[] parties = ligne2.split(",");
+
                 if (parties.length >= 2) {
-                    revenu.add(new Revenu(parties[0], Double.parseDouble(parties[1])));
+                    transactions.add(new Revenu(parties[0], Double.parseDouble(parties[1])));
                 }
+
             }
         } catch (Exception e) {
         }
@@ -49,12 +63,11 @@ public class MAIN {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         scanner.useLocale(java.util.Locale.US);
-        ArrayList<Depense> depense = new ArrayList<>();
-        ArrayList<Revenu> revenu = new ArrayList<>();
+        ArrayList<Transaction> transactions = new ArrayList<>();
 
         int choix = 0;
 
-        charger(depense, revenu);
+        charger(transactions);
 
         while (choix != 4) {
 
@@ -79,7 +92,7 @@ public class MAIN {
                 montant = scanner.nextDouble();
                 scanner.nextLine();
                 System.out.println("Dépense ajoutée : " + nom + " - " + montant + "$");
-                depense.add(new Depense(nom, montant));
+                transactions.add(new Depense(nom, montant));
 
             } else if (choix == 2) {
 
@@ -92,30 +105,46 @@ public class MAIN {
                 montant = scanner.nextDouble();
                 scanner.nextLine();
                 System.out.println("Revenu ajouté : " + nom + " - " + montant + "$");
-                revenu.add(new Revenu(nom, montant));
+                transactions.add(new Revenu(nom, montant));
 
             } else if (choix == 3) {
 
                 double sommeDepenses = 0;
                 double sommeRevenus = 0;
                 double solde = 0;
-                System.out.println("\n--- Mes depenses ---");
 
-                for (int i = 0; i < depense.size(); i++) {
-                    int numero = i + 1;
-                    sommeDepenses += depense.get(i).getMontant();
-                    System.out.println(
-                            numero + ". " + depense.get(i).getNom() + " - " + depense.get(i).getMontant() + "$");
+                for (int i = 0; i < transactions.size(); i++) {
+                    solde += transactions.get(i).getMontantSigne();
+                }
+
+                System.out.println("\n--- Mes depenses ---");
+                int numero = 1;
+                
+                for (int i = 0; i < transactions.size(); i++) {
+
+                    if (transactions.get(i) instanceof Depense) {
+                        sommeDepenses += transactions.get(i).getMontant();
+                        System.out.println(
+                                numero + ". " + transactions.get(i).getNom() + " - " + transactions.get(i).getMontant()
+                                        + "$");
+                        numero ++;
+                    }
+
                 }
 
                 System.out.println("--------------------");
                 System.out.println("\n--- Mes revenus ---");
+                numero = 1;
 
-                for (int i = 0; i < revenu.size(); i++) {
-                    int numero = i + 1;
-                    sommeRevenus += revenu.get(i).getMontant();
-                    System.out
-                            .println(numero + ". " + revenu.get(i).getNom() + " - " + revenu.get(i).getMontant() + "$");
+                for (int i = 0; i < transactions.size(); i++) {
+
+                    if (transactions.get(i) instanceof Revenu) {
+                        sommeRevenus += transactions.get(i).getMontant();
+                        System.out.println(numero + ". " + transactions.get(i).getNom() + " - "
+                                + transactions.get(i).getMontant() + "$");
+                        numero ++;
+                    }
+
                 }
 
                 System.out.println("--------------------");
@@ -128,7 +157,7 @@ public class MAIN {
         }
 
         System.out.println("A bientot!");
-        sauvegarder(depense, revenu);
+        sauvegarder(transactions);
         ;
     }
 }

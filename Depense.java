@@ -4,4 +4,7 @@ public class Depense extends Transaction {
         super(nom, montant);
     }
 
+    public double getMontantSigne() {
+        return -getMontant();
+    }
 }

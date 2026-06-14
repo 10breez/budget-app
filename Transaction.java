@@ -1,4 +1,4 @@
-public class Transaction {
+public abstract class Transaction {
     String nom;
     double montant;
 
@@ -14,4 +14,7 @@ public class Transaction {
     public double getMontant() {
         return montant;
     }
+
+    public abstract double getMontantSigne();
+
 }
